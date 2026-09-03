@@ -26,24 +26,20 @@ use gtk::glib::prelude::{StaticVariantType, ToVariant};
 use gtk::glib::translate::FromGlib;
 use gtk::pango::EllipsizeMode;
 use gtk::prelude::{
-    BoxExt, GObjectPropertyExpressionExt, ListItemExt, ObjectExt, SorterExt, ToValue, WidgetExt,
+    BoxExt, GObjectPropertyExpressionExt, ListItemExt, ObjectExt, ToValue, WidgetExt,
 };
 use gtk::{
     Adjustment, Align, Box, ClosureExpression, CustomSorter, FilterListModel, Frame, Label,
     ListItem, ListView, NoSelection, Orientation, ScrolledWindow, SignalListItemFactory,
-    SortListModel, SorterChange, SpinButton, StringFilter, StringFilterMatchMode, Widget, glib,
+    SortListModel, SpinButton, StringFilter, StringFilterMatchMode, Widget, glib,
 };
-use std::cell::Cell;
 use std::cell::RefCell;
-use std::cmp::Ordering;
 use std::ffi::c_ulong;
-use std::rc::Rc;
 use std::sync::mpsc::channel;
 use std::time::Duration;
 
-#[derive(Clone, Copy, Default)]
+#[derive(Clone, Copy)]
 enum StatOrder {
-    #[default]
     SteamDefault,
     Alphabetical,
 }
@@ -72,25 +68,17 @@ pub fn create_stats_view(application: &MainApplication) -> (Frame, ListStore, St
         .filter(&app_stats_string_filter)
         .build();
 
-    let stat_order = Rc::new(Cell::new(StatOrder::default()));
-    let stat_sorter = CustomSorter::new({
-        let stat_order = Rc::clone(&stat_order);
-        move |obj1, obj2| {
-            if matches!(stat_order.get(), StatOrder::SteamDefault) {
-                return Ordering::Equal.into();
-            }
-            let stat1 = obj1.downcast_ref::<GStatObject>().unwrap();
-            let stat2 = obj2.downcast_ref::<GStatObject>().unwrap();
-            stat1
-                .display_name()
-                .to_lowercase()
-                .cmp(&stat2.display_name().to_lowercase())
-                .into()
-        }
+    let stat_sorter = CustomSorter::new(|obj1, obj2| {
+        let stat1 = obj1.downcast_ref::<GStatObject>().unwrap();
+        let stat2 = obj2.downcast_ref::<GStatObject>().unwrap();
+        stat1
+            .display_name()
+            .to_lowercase()
+            .cmp(&stat2.display_name().to_lowercase())
+            .into()
     });
     let app_stats_sort_model = SortListModel::builder()
         .model(&app_stats_filter_model)
-        .sorter(&stat_sorter)
         .build();
 
     let order_action = SimpleAction::new_stateful(
@@ -100,9 +88,9 @@ pub fn create_stats_view(application: &MainApplication) -> (Frame, ListStore, St
     );
     order_action.connect_activate(glib::clone!(
         #[strong]
-        stat_order,
-        #[weak]
         stat_sorter,
+        #[weak(rename_to = sort_model)]
+        app_stats_sort_model,
         move |action, target| {
             let Some(value) = target.and_then(|target| target.str()) else {
                 return;
@@ -111,8 +99,10 @@ pub fn create_stats_view(application: &MainApplication) -> (Frame, ListStore, St
                 return;
             };
             action.set_state(&value.to_variant());
-            stat_order.set(order);
-            stat_sorter.changed(SorterChange::Different);
+            match order {
+                StatOrder::SteamDefault => sort_model.set_sorter(None::<&CustomSorter>),
+                StatOrder::Alphabetical => sort_model.set_sorter(Some(&stat_sorter)),
+            }
         }
     ));
     application.add_action(&order_action);

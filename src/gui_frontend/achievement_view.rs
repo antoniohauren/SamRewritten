@@ -131,8 +131,10 @@ pub fn create_achievements_view(
     order_action.connect_activate(glib::clone!(
         #[strong]
         achievement_order,
-        #[weak]
+        #[strong]
         achievement_sorter,
+        #[weak(rename_to = sort_model)]
+        app_achievement_sort_model,
         move |action, target| {
             let Some(value) = target.and_then(|target| target.str()) else {
                 return;
@@ -142,7 +144,12 @@ pub fn create_achievements_view(
             };
             action.set_state(&value.to_variant());
             achievement_order.set(order);
-            achievement_sorter.changed(SorterChange::Different);
+            if matches!(order, AchievementOrder::SteamDefault) {
+                sort_model.set_sorter(None::<&CustomSorter>);
+            } else {
+                sort_model.set_sorter(Some(&achievement_sorter));
+                achievement_sorter.changed(SorterChange::Different);
+            }
         }
     ));
     application.add_action(&order_action);

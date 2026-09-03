@@ -184,7 +184,6 @@ pub(super) fn install_row_factory(
                                     start_button
                                         .set_sensitive(new_unlocked != raw_model_len as usize);
                                     update_autofill();
-                                    model_updates.changed();
                                 }
                                 Ok(false) => {
                                     eprintln!("[CLIENT] Steam did not store the achievement");
@@ -196,6 +195,7 @@ pub(super) fn install_row_factory(
                                 }
                             }
                             switch.set_sensitive(true);
+                            model_updates.changed();
                         }
                     ));
                 }

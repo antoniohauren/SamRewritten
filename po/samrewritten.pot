@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SamRewritten\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-03 14:52-0300\n"
+"POT-Creation-Date: 2026-09-03 21:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,7 +59,7 @@ msgstr ""
 msgid "Refresh achievement counts"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:230 src/gui_frontend/ui_components.rs:414
+#: src/gui_frontend/ui_components.rs:230 src/gui_frontend/ui_components.rs:471
 msgid "About"
 msgstr ""
 
@@ -103,61 +103,61 @@ msgstr ""
 msgid "Game default"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:407
+#: src/gui_frontend/ui_components.rs:411
 msgid "Refresh achievements & stats"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:411
+#: src/gui_frontend/ui_components.rs:415
 msgid "Reset everything"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:432 src/gui_frontend/ui_components.rs:449
-msgid "Steam default"
-msgstr ""
-
-#: src/gui_frontend/ui_components.rs:433 src/gui_frontend/ui_components.rs:450
-msgid "Alphabetically"
-msgstr ""
-
-#: src/gui_frontend/ui_components.rs:439
-msgid "Stat order"
-msgstr ""
-
-#: src/gui_frontend/ui_components.rs:444
+#: src/gui_frontend/ui_components.rs:435
 msgid "Achievement language"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:451
-msgid "Global percentage"
-msgstr ""
-
-#: src/gui_frontend/ui_components.rs:452
-msgid "Unlock date"
-msgstr ""
-
-#: src/gui_frontend/ui_components.rs:458
+#: src/gui_frontend/ui_components.rs:440
 msgid "Achievement order"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:462
+#: src/gui_frontend/ui_components.rs:443 src/gui_frontend/ui_components.rs:465
+msgid "Steam default"
+msgstr ""
+
+#: src/gui_frontend/ui_components.rs:444 src/gui_frontend/ui_components.rs:466
+msgid "Alphabetically"
+msgstr ""
+
+#: src/gui_frontend/ui_components.rs:445
+msgid "Global percentage"
+msgstr ""
+
+#: src/gui_frontend/ui_components.rs:446
+msgid "Unlock date"
+msgstr ""
+
+#: src/gui_frontend/ui_components.rs:451
+msgid "Achievement state"
+msgstr ""
+
+#: src/gui_frontend/ui_components.rs:454
 msgid "All"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:463
+#: src/gui_frontend/ui_components.rs:455
 msgid "Locked"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:464
+#: src/gui_frontend/ui_components.rs:456
 msgid "Unlocked"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:470
-msgid "Achievement state"
+#: src/gui_frontend/ui_components.rs:462
+msgid "Stat order"
 msgstr ""
 
 #: src/gui_frontend/dialogs.rs:89 src/gui_frontend/dialogs.rs:162
 #: src/gui_frontend/dialogs.rs:185 src/gui_frontend/dialogs.rs:233
-#: src/gui_frontend/unlock_scheduler.rs:185
+#: src/gui_frontend/unlock_scheduler.rs:217
 #: src/gui_frontend/app_list_view/progress_actions.rs:43
 msgid "OK"
 msgstr ""
@@ -187,9 +187,9 @@ msgstr ""
 #: src/gui_frontend/dialogs.rs:290
 msgid ""
 "If you've installed Steam in a custom location, you can point SamRewritten "
-"to it using environment variables. Please check the <a href=\"https://"
-"github.com/PaulCombal/SamRewritten\">GitHub page</a> for instructions, or to "
-"report your issue."
+"to it using environment variables. Please check the <a href=\"https://github."
+"com/PaulCombal/SamRewritten\">GitHub page</a> for instructions, or to report "
+"your issue."
 msgstr ""
 
 #: src/gui_frontend/dialogs.rs:295
@@ -314,11 +314,11 @@ msgstr ""
 msgid "Stats"
 msgstr ""
 
-#: src/gui_frontend/stat_view.rs:152
+#: src/gui_frontend/stat_view.rs:166
 msgid "Increment only"
 msgstr ""
 
-#: src/gui_frontend/stat_view.rs:157
+#: src/gui_frontend/stat_view.rs:171
 msgid "This statistic is protected."
 msgstr ""
 
@@ -326,19 +326,19 @@ msgstr ""
 msgid "Stop and go back"
 msgstr ""
 
-#: src/gui_frontend/achievement_manual_view/mod.rs:57
+#: src/gui_frontend/achievement_manual_view/mod.rs:58
 msgid "No achievements staged"
 msgstr ""
 
-#: src/gui_frontend/achievement_manual_view/mod.rs:58
+#: src/gui_frontend/achievement_manual_view/mod.rs:59
 msgid "{count} staged"
 msgstr ""
 
-#: src/gui_frontend/achievement_manual_view/mod.rs:96
+#: src/gui_frontend/achievement_manual_view/mod.rs:97
 msgid "Already at or above target ({progress})"
 msgstr ""
 
-#: src/gui_frontend/achievement_manual_view/mod.rs:102
+#: src/gui_frontend/achievement_manual_view/mod.rs:103
 msgid "Auto-fill {count} achievement(s) ({progress})"
 msgstr ""
 
@@ -404,7 +404,7 @@ msgid "Spacing"
 msgstr ""
 
 #: src/gui_frontend/achievement_manual_view/copy_controls.rs:38
-#: src/gui_frontend/achievement_manual_view/copy_mode.rs:234
+#: src/gui_frontend/achievement_manual_view/copy_mode.rs:238
 msgid "Choose a friend to copy timing from"
 msgstr ""
 
@@ -425,11 +425,11 @@ msgstr ""
 msgid "First delay"
 msgstr ""
 
-#: src/gui_frontend/achievement_manual_view/copy_mode.rs:101
+#: src/gui_frontend/achievement_manual_view/copy_mode.rs:105
 msgid "No friend loaded"
 msgstr ""
 
-#: src/gui_frontend/achievement_manual_view/copy_mode.rs:111
+#: src/gui_frontend/achievement_manual_view/copy_mode.rs:115
 msgid "{count} achievements over {time}"
 msgstr ""
 
