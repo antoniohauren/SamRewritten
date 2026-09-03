@@ -16,9 +16,10 @@
 use super::gobjects::stat::GStatObject;
 use super::request::{Request, SetFloatStat, SetIntStat};
 use crate::gui_frontend::MainApplication;
+use crate::gui_frontend::gsettings::get_settings;
 use crate::gui_frontend::i18n::tr;
 use crate::utils::action_journal::{Batch, Change, Op};
-use gtk::gio::prelude::ActionMapExt;
+use gtk::gio::prelude::{ActionMapExt, SettingsExt};
 use gtk::gio::{ListStore, SimpleAction, spawn_blocking};
 use gtk::glib::SignalHandlerId;
 use gtk::glib::object::Cast;
@@ -55,6 +56,7 @@ impl StatOrder {
 }
 
 pub fn create_stats_view(application: &MainApplication) -> (Frame, ListStore, StringFilter) {
+    let settings = get_settings();
     let stats_list_factory = SignalListItemFactory::new();
     let app_stats_model = ListStore::new::<GStatObject>();
 
@@ -80,15 +82,23 @@ pub fn create_stats_view(application: &MainApplication) -> (Frame, ListStore, St
     let app_stats_sort_model = SortListModel::builder()
         .model(&app_stats_filter_model)
         .build();
+    let order_value = settings.string("stat-order").to_string();
+    let initial_order =
+        StatOrder::from_action_target(&order_value).unwrap_or(StatOrder::SteamDefault);
+    if matches!(initial_order, StatOrder::Alphabetical) {
+        app_stats_sort_model.set_sorter(Some(&stat_sorter));
+    }
 
     let order_action = SimpleAction::new_stateful(
         "stat-order",
         Some(&String::static_variant_type()),
-        &"steam-default".to_variant(),
+        &order_value.to_variant(),
     );
     order_action.connect_activate(glib::clone!(
         #[strong]
         stat_sorter,
+        #[strong]
+        settings,
         #[weak(rename_to = sort_model)]
         app_stats_sort_model,
         move |action, target| {
@@ -99,6 +109,9 @@ pub fn create_stats_view(application: &MainApplication) -> (Frame, ListStore, St
                 return;
             };
             action.set_state(&value.to_variant());
+            if let Err(e) = settings.set_string("stat-order", value) {
+                eprintln!("[CLIENT] Error saving stat order: {e:?}");
+            }
             match order {
                 StatOrder::SteamDefault => sort_model.set_sorter(None::<&CustomSorter>),
                 StatOrder::Alphabetical => sort_model.set_sorter(Some(&stat_sorter)),

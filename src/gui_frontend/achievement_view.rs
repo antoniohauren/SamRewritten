@@ -17,6 +17,7 @@ use crate::gui_frontend::MainApplication;
 use crate::gui_frontend::achievement_automatic_view::create_achievements_automatic_view;
 use crate::gui_frontend::achievement_manual_view::create_achievements_manual_view;
 use crate::gui_frontend::gobjects::achievement::GAchievementObject;
+use crate::gui_frontend::gsettings::get_settings;
 use crate::gui_frontend::unlock_scheduler::AchievementModelUpdates;
 use gtk::gio::{ListStore, SimpleAction};
 use gtk::glib;
@@ -58,6 +59,7 @@ pub fn create_achievements_view(
     application: &MainApplication,
     app_achievement_count_value: &Label,
 ) -> (Stack, ListStore, StringFilter, Arc<AtomicBool>) {
+    let settings = get_settings();
     let app_achievements_model = ListStore::new::<GAchievementObject>();
     let app_timed_achievements_model = ListStore::new::<GAchievementObject>();
 
@@ -91,7 +93,9 @@ pub fn create_achievements_view(
         .filter(&app_achievement_string_filter)
         .build();
 
-    let achievement_order = Rc::new(Cell::new(AchievementOrder::default()));
+    let order_value = settings.string("achievement-order").to_string();
+    let initial_order = AchievementOrder::from_action_target(&order_value).unwrap_or_default();
+    let achievement_order = Rc::new(Cell::new(initial_order));
     let achievement_sorter = CustomSorter::new({
         let achievement_order = Rc::clone(&achievement_order);
         move |obj1, obj2| {
@@ -120,19 +124,24 @@ pub fn create_achievements_view(
         .model(&app_achievement_status_filter_model)
         .sorter(&achievement_sorter)
         .build();
+    if matches!(initial_order, AchievementOrder::SteamDefault) {
+        app_achievement_sort_model.set_sorter(None::<&CustomSorter>);
+    }
     let achievement_model_updates =
         AchievementModelUpdates::new(&achievement_status_filter, &achievement_sorter);
 
     let order_action = SimpleAction::new_stateful(
         "achievement-order",
         Some(&String::static_variant_type()),
-        &"global-percentage".to_variant(),
+        &order_value.to_variant(),
     );
     order_action.connect_activate(glib::clone!(
         #[strong]
         achievement_order,
         #[strong]
         achievement_sorter,
+        #[strong]
+        settings,
         #[weak(rename_to = sort_model)]
         app_achievement_sort_model,
         move |action, target| {
@@ -143,6 +152,9 @@ pub fn create_achievements_view(
                 return;
             };
             action.set_state(&value.to_variant());
+            if let Err(e) = settings.set_string("achievement-order", value) {
+                eprintln!("[CLIENT] Error saving achievement order: {e:?}");
+            }
             achievement_order.set(order);
             if matches!(order, AchievementOrder::SteamDefault) {
                 sort_model.set_sorter(None::<&CustomSorter>);
