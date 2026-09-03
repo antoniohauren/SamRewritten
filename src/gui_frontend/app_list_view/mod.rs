@@ -411,6 +411,7 @@ pub fn create_main_ui(
         cancel_timed_unlock,
         app_achievements_stack,
         achievement_status_filter_box,
+        achievement_order_button,
     ) = create_app_view(
         app_id.clone(),
         app_unlocked_achievements_count.clone(),
@@ -483,6 +484,7 @@ pub fn create_main_ui(
     header_bar.pack_start(&back_button);
     header_bar.pack_start(&sidebar_button);
     header_bar.pack_start(&search_entry);
+    header_bar.pack_start(&achievement_order_button);
     header_bar.pack_end(&context_menu_button);
     header_bar.pack_end(&context_menu_button_loading);
     header_bar.pack_end(&achievement_status_filter_box);
@@ -1715,11 +1717,14 @@ pub fn create_main_ui(
         list_stack,
         #[weak]
         achievement_status_filter_box,
+        #[weak]
+        achievement_order_button,
         move |stack| {
-            achievement_status_filter_box.set_visible(
-                list_stack.visible_child_name().as_deref() == Some("app")
-                    && stack.visible_child_name().as_deref() == Some("achievements"),
-            );
+            let show_achievement_controls = list_stack.visible_child_name().as_deref()
+                == Some("app")
+                && stack.visible_child_name().as_deref() == Some("achievements");
+            achievement_status_filter_box.set_visible(show_achievement_controls);
+            achievement_order_button.set_visible(show_achievement_controls);
         }
     ));
 
@@ -1738,6 +1743,8 @@ pub fn create_main_ui(
         action_refresh_app_list,
         #[weak]
         achievement_status_filter_box,
+        #[weak]
+        achievement_order_button,
         #[strong]
         prefetched_progress,
         #[strong]
@@ -1746,10 +1753,10 @@ pub fn create_main_ui(
             let page = stack.visible_child_name();
             let page = page.as_deref();
             let on_own_page = page == Some("app") || page == Some("profile");
-            achievement_status_filter_box.set_visible(
-                page == Some("app")
-                    && app_stack.visible_child_name().as_deref() == Some("achievements"),
-            );
+            let show_achievement_controls = page == Some("app")
+                && app_stack.visible_child_name().as_deref() == Some("achievements");
+            achievement_status_filter_box.set_visible(show_achievement_controls);
+            achievement_order_button.set_visible(show_achievement_controls);
             sidebar_button.set_visible(!on_own_page);
             sidebar_button.set_sensitive(page == Some("list"));
             search_entry.set_sensitive(page != Some("profile"));

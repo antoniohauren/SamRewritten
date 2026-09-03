@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SamRewritten\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-03 10:59-0300\n"
+"POT-Creation-Date: 2026-09-03 11:39-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,8 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/gui_frontend/ui_components.rs:159 src/gui_frontend/app_view.rs:63
-#: src/gui_frontend/app_list_view/mod.rs:422
+#: src/gui_frontend/ui_components.rs:159 src/gui_frontend/app_view.rs:64
+#: src/gui_frontend/app_list_view/mod.rs:423
 msgid "Loading..."
 msgstr ""
 
@@ -234,43 +234,43 @@ msgstr ""
 msgid "Select your Steam folder"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:69
+#: src/gui_frontend/app_view.rs:70
 msgid "Achievements:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:83
+#: src/gui_frontend/app_view.rs:84
 msgid "Stats:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:97
+#: src/gui_frontend/app_view.rs:98
 msgid "Last playtime:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:111
+#: src/gui_frontend/app_view.rs:112
 msgid "Type:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:125
+#: src/gui_frontend/app_view.rs:126
 msgid "Developer:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:142
+#: src/gui_frontend/app_view.rs:143
 msgid "Metacritic:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:156
+#: src/gui_frontend/app_view.rs:157
 msgid "Failed to load app."
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:162
+#: src/gui_frontend/app_view.rs:163
 msgid "No entries found."
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:179
+#: src/gui_frontend/app_view.rs:180
 msgid "Achievements"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:182
+#: src/gui_frontend/app_view.rs:183
 msgid "Stats"
 msgstr ""
 
@@ -284,6 +284,38 @@ msgstr ""
 
 #: src/gui_frontend/achievement_automatic_view.rs:40
 msgid "Stop and go back"
+msgstr ""
+
+#: src/gui_frontend/achievement_view.rs:78
+msgid "All"
+msgstr ""
+
+#: src/gui_frontend/achievement_view.rs:82
+msgid "Locked"
+msgstr ""
+
+#: src/gui_frontend/achievement_view.rs:87
+msgid "Unlocked"
+msgstr ""
+
+#: src/gui_frontend/achievement_view.rs:163
+msgid "Steam default"
+msgstr ""
+
+#: src/gui_frontend/achievement_view.rs:166
+msgid "Alphabetically"
+msgstr ""
+
+#: src/gui_frontend/achievement_view.rs:170
+msgid "Global percentage"
+msgstr ""
+
+#: src/gui_frontend/achievement_view.rs:174
+msgid "Unlock date"
+msgstr ""
+
+#: src/gui_frontend/achievement_view.rs:185
+msgid "Order achievements"
 msgstr ""
 
 #: src/gui_frontend/achievement_manual_view/mod.rs:57
@@ -421,33 +453,33 @@ msgstr ""
 msgid "Clear selected user"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:443
+#: src/gui_frontend/app_list_view/mod.rs:444
 msgid "SamRewritten could not connect to Steam. Is it running?"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:448
+#: src/gui_frontend/app_list_view/mod.rs:449
 msgid "Try again"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:465
-#: src/gui_frontend/app_list_view/mod.rs:1771
+#: src/gui_frontend/app_list_view/mod.rs:466
+#: src/gui_frontend/app_list_view/mod.rs:1778
 msgid "Name or AppId (Ctrl+K)"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:481
+#: src/gui_frontend/app_list_view/mod.rs:482
 msgid "Show or hide the sidebar"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:1766
+#: src/gui_frontend/app_list_view/mod.rs:1773
 msgid "Achievement or stat..."
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:1885
+#: src/gui_frontend/app_list_view/mod.rs:1892
 #: src/gui_frontend/app_list_view/settings_bindings.rs:328
 msgid "Could not change the in-game setting"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:1887
+#: src/gui_frontend/app_list_view/mod.rs:1894
 #: src/gui_frontend/app_list_view/settings_bindings.rs:329
 msgid "The change could not be applied. Restart SamRewritten and try again."
 msgstr ""

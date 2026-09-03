@@ -22,9 +22,9 @@ use gtk::gio::ListStore;
 use gtk::glib;
 use gtk::prelude::*;
 use gtk::{
-    Align, Box, CustomFilter, CustomSorter, FilterChange, FilterListModel, Label, NoSelection,
-    Orientation, SortListModel, Stack, StackTransitionType, StringFilter, StringFilterMatchMode,
-    ToggleButton,
+    Align, Box, CheckButton, CustomFilter, CustomSorter, FilterChange, FilterListModel, Label,
+    MenuButton, NoSelection, Orientation, Popover, SortListModel, SorterChange, Stack,
+    StackTransitionType, StringFilter, StringFilterMatchMode, ToggleButton,
 };
 use std::cell::Cell;
 use std::cmp::Ordering;
@@ -37,7 +37,14 @@ pub fn create_achievements_view(
     app_unlocked_achievements_count: Rc<Cell<usize>>,
     application: &MainApplication,
     app_achievement_count_value: &Label,
-) -> (Stack, ListStore, StringFilter, Arc<AtomicBool>, Box) {
+) -> (
+    Stack,
+    ListStore,
+    StringFilter,
+    Arc<AtomicBool>,
+    Box,
+    MenuButton,
+) {
     let app_achievements_model = ListStore::new::<GAchievementObject>();
     let app_timed_achievements_model = ListStore::new::<GAchievementObject>();
 
@@ -113,22 +120,94 @@ pub fn create_achievements_view(
         .filter(&app_achievement_string_filter)
         .build();
 
-    let global_achieved_percent_sorter = CustomSorter::new(move |obj1, obj2| {
-        let achievement1 = obj1.downcast_ref::<GAchievementObject>().unwrap();
-        let achievement2 = obj2.downcast_ref::<GAchievementObject>().unwrap();
-
-        let percent1 = achievement1.global_achieved_percent();
-        let percent2 = achievement2.global_achieved_percent();
-
-        percent2
-            .partial_cmp(&percent1)
-            .unwrap_or(Ordering::Equal)
-            .into()
+    // 0 = Steam's source order, 1 = name, 2 = global percentage,
+    // 3 = most recently unlocked.
+    let achievement_order = Rc::new(Cell::new(2u8));
+    let achievement_sorter = CustomSorter::new({
+        let achievement_order = Rc::clone(&achievement_order);
+        move |obj1, obj2| {
+            let achievement1 = obj1.downcast_ref::<GAchievementObject>().unwrap();
+            let achievement2 = obj2.downcast_ref::<GAchievementObject>().unwrap();
+            match achievement_order.get() {
+                0 => Ordering::Equal.into(),
+                1 => achievement1
+                    .name()
+                    .to_lowercase()
+                    .cmp(&achievement2.name().to_lowercase())
+                    .into(),
+                3 => achievement2
+                    .unlock_time_seconds()
+                    .cmp(&achievement1.unlock_time_seconds())
+                    .into(),
+                _ => achievement2
+                    .global_achieved_percent()
+                    .partial_cmp(&achievement1.global_achieved_percent())
+                    .unwrap_or(Ordering::Equal)
+                    .into(),
+            }
+        }
     });
     let app_achievement_sort_model = SortListModel::builder()
         .model(&app_achievement_status_filter_model)
-        .sorter(&global_achieved_percent_sorter)
+        .sorter(&achievement_sorter)
         .build();
+
+    let order_popover_box = Box::builder()
+        .orientation(Orientation::Vertical)
+        .margin_start(8)
+        .margin_end(8)
+        .margin_top(8)
+        .margin_bottom(8)
+        .build();
+    let steam_order = CheckButton::builder()
+        .label(tr("Steam default").as_str())
+        .build();
+    let alphabetical_order = CheckButton::builder()
+        .label(tr("Alphabetically").as_str())
+        .group(&steam_order)
+        .build();
+    let percentage_order = CheckButton::builder()
+        .label(tr("Global percentage").as_str())
+        .group(&steam_order)
+        .build();
+    let unlock_date_order = CheckButton::builder()
+        .label(tr("Unlock date").as_str())
+        .group(&steam_order)
+        .build();
+    percentage_order.set_active(true);
+    order_popover_box.append(&steam_order);
+    order_popover_box.append(&alphabetical_order);
+    order_popover_box.append(&percentage_order);
+    order_popover_box.append(&unlock_date_order);
+    let order_popover = Popover::builder().child(&order_popover_box).build();
+    let order_button = MenuButton::builder()
+        .icon_name("view-sort-descending-symbolic")
+        .tooltip_text(tr("Order achievements").as_str())
+        .popover(&order_popover)
+        .visible(false)
+        .build();
+    for (button, order) in [
+        (&steam_order, 0),
+        (&alphabetical_order, 1),
+        (&percentage_order, 2),
+        (&unlock_date_order, 3),
+    ] {
+        button.connect_toggled(glib::clone!(
+            #[strong]
+            achievement_order,
+            #[weak]
+            achievement_sorter,
+            #[weak]
+            order_popover,
+            move |button| {
+                if button.is_active() {
+                    achievement_order.set(order);
+                    achievement_sorter.changed(SorterChange::Different);
+                    order_popover.popdown();
+                }
+            }
+        ));
+    }
 
     let app_achievement_selection_model = NoSelection::new(Option::<ListStore>::None);
     app_achievement_selection_model.set_model(Some(&app_achievement_sort_model));
@@ -161,5 +240,6 @@ pub fn create_achievements_view(
         app_achievement_string_filter,
         cancel_timed_unlock,
         status_filter_box,
+        order_button,
     )
 }
