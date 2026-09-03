@@ -427,16 +427,15 @@ pub fn set_app_details_view_options(menu_model: &gtk::gio::Menu, achievements: b
     }
 
     if !achievements {
-        let order_menu = gtk::gio::Menu::new();
-        for (label, value) in [
-            (tr("Steam default"), "steam-default"),
-            (tr("Alphabetically"), "alphabetical"),
-        ] {
-            let item = gtk::gio::MenuItem::new(Some(label.as_str()), Some("app.stat-order"));
-            item.set_action_and_target_value(Some("app.stat-order"), Some(&value.to_variant()));
-            order_menu.append_item(&item);
-        }
-        menu_model.append_submenu(Some(tr("Stat order").as_str()), &order_menu);
+        append_target_submenu(
+            menu_model,
+            tr("Stat order"),
+            "app.stat-order",
+            [
+                (tr("Steam default"), "steam-default"),
+                (tr("Alphabetically"), "alphabetical"),
+            ],
+        );
         return;
     }
 
@@ -444,28 +443,40 @@ pub fn set_app_details_view_options(menu_model: &gtk::gio::Menu, achievements: b
         menu_model.append_submenu(Some(tr("Achievement language").as_str()), menu);
     });
 
-    let order_menu = gtk::gio::Menu::new();
-    for (label, value) in [
-        (tr("Steam default"), "steam-default"),
-        (tr("Alphabetically"), "alphabetical"),
-        (tr("Global percentage"), "global-percentage"),
-        (tr("Unlock date"), "unlock-date"),
-    ] {
-        let item = gtk::gio::MenuItem::new(Some(label.as_str()), Some("app.achievement-order"));
-        item.set_action_and_target_value(Some("app.achievement-order"), Some(&value.to_variant()));
-        order_menu.append_item(&item);
-    }
-    menu_model.append_submenu(Some(tr("Achievement order").as_str()), &order_menu);
+    append_target_submenu(
+        menu_model,
+        tr("Achievement order"),
+        "app.achievement-order",
+        [
+            (tr("Steam default"), "steam-default"),
+            (tr("Alphabetically"), "alphabetical"),
+            (tr("Global percentage"), "global-percentage"),
+            (tr("Unlock date"), "unlock-date"),
+        ],
+    );
+    append_target_submenu(
+        menu_model,
+        tr("Achievement state"),
+        "app.achievement-state",
+        [
+            (tr("All"), "all"),
+            (tr("Locked"), "locked"),
+            (tr("Unlocked"), "unlocked"),
+        ],
+    );
+}
 
-    let state_menu = gtk::gio::Menu::new();
-    for (label, value) in [
-        (tr("All"), "all"),
-        (tr("Locked"), "locked"),
-        (tr("Unlocked"), "unlocked"),
-    ] {
-        let item = gtk::gio::MenuItem::new(Some(label.as_str()), Some("app.achievement-state"));
-        item.set_action_and_target_value(Some("app.achievement-state"), Some(&value.to_variant()));
-        state_menu.append_item(&item);
+fn append_target_submenu<const N: usize>(
+    menu_model: &gtk::gio::Menu,
+    label: gtk::glib::GString,
+    action: &str,
+    entries: [(gtk::glib::GString, &'static str); N],
+) {
+    let submenu = gtk::gio::Menu::new();
+    for (label, value) in entries {
+        let item = gtk::gio::MenuItem::new(Some(label.as_str()), Some(action));
+        item.set_action_and_target_value(Some(action), Some(&value.to_variant()));
+        submenu.append_item(&item);
     }
-    menu_model.append_submenu(Some(tr("Achievement state").as_str()), &state_menu);
+    menu_model.append_submenu(Some(label.as_str()), &submenu);
 }

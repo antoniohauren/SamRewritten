@@ -41,6 +41,23 @@ use std::rc::Rc;
 use std::sync::mpsc::channel;
 use std::time::Duration;
 
+#[derive(Clone, Copy, Default)]
+enum StatOrder {
+    #[default]
+    SteamDefault,
+    Alphabetical,
+}
+
+impl StatOrder {
+    fn from_action_target(value: &str) -> Option<Self> {
+        match value {
+            "steam-default" => Some(Self::SteamDefault),
+            "alphabetical" => Some(Self::Alphabetical),
+            _ => None,
+        }
+    }
+}
+
 pub fn create_stats_view(application: &MainApplication) -> (Frame, ListStore, StringFilter) {
     let stats_list_factory = SignalListItemFactory::new();
     let app_stats_model = ListStore::new::<GStatObject>();
@@ -55,12 +72,11 @@ pub fn create_stats_view(application: &MainApplication) -> (Frame, ListStore, St
         .filter(&app_stats_string_filter)
         .build();
 
-    // 0 keeps Steam's schema order; 1 sorts by the displayed, localized name.
-    let stat_order = Rc::new(Cell::new(0u8));
+    let stat_order = Rc::new(Cell::new(StatOrder::default()));
     let stat_sorter = CustomSorter::new({
         let stat_order = Rc::clone(&stat_order);
         move |obj1, obj2| {
-            if stat_order.get() == 0 {
+            if matches!(stat_order.get(), StatOrder::SteamDefault) {
                 return Ordering::Equal.into();
             }
             let stat1 = obj1.downcast_ref::<GStatObject>().unwrap();
@@ -91,8 +107,11 @@ pub fn create_stats_view(application: &MainApplication) -> (Frame, ListStore, St
             let Some(value) = target.and_then(|target| target.str()) else {
                 return;
             };
+            let Some(order) = StatOrder::from_action_target(value) else {
+                return;
+            };
             action.set_state(&value.to_variant());
-            stat_order.set(u8::from(value == "alphabetical"));
+            stat_order.set(order);
             stat_sorter.changed(SorterChange::Different);
         }
     ));
@@ -415,4 +434,14 @@ pub fn create_stats_view(application: &MainApplication) -> (Frame, ListStore, St
         .build();
 
     (app_stats_frame, app_stats_model, app_stats_string_filter)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::StatOrder;
+
+    #[test]
+    fn stat_order_rejects_unknown_action_targets() {
+        assert!(StatOrder::from_action_target("unknown").is_none());
+    }
 }

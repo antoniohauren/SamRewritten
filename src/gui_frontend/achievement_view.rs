@@ -17,6 +17,7 @@ use crate::gui_frontend::MainApplication;
 use crate::gui_frontend::achievement_automatic_view::create_achievements_automatic_view;
 use crate::gui_frontend::achievement_manual_view::create_achievements_manual_view;
 use crate::gui_frontend::gobjects::achievement::GAchievementObject;
+use crate::gui_frontend::unlock_scheduler::AchievementModelUpdates;
 use gtk::gio::{ListStore, SimpleAction};
 use gtk::glib;
 use gtk::prelude::*;
@@ -29,6 +30,27 @@ use std::cmp::Ordering;
 use std::rc::Rc;
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
+
+#[derive(Clone, Copy, Default)]
+enum AchievementOrder {
+    SteamDefault,
+    Alphabetical,
+    #[default]
+    GlobalPercentage,
+    UnlockDate,
+}
+
+impl AchievementOrder {
+    fn from_action_target(value: &str) -> Option<Self> {
+        match value {
+            "steam-default" => Some(Self::SteamDefault),
+            "alphabetical" => Some(Self::Alphabetical),
+            "global-percentage" => Some(Self::GlobalPercentage),
+            "unlock-date" => Some(Self::UnlockDate),
+            _ => None,
+        }
+    }
+}
 
 pub fn create_achievements_view(
     app_id: Rc<Cell<Option<u32>>>,
@@ -69,26 +91,24 @@ pub fn create_achievements_view(
         .filter(&app_achievement_string_filter)
         .build();
 
-    // 0 = Steam's source order, 1 = name, 2 = global percentage,
-    // 3 = most recently unlocked.
-    let achievement_order = Rc::new(Cell::new(2u8));
+    let achievement_order = Rc::new(Cell::new(AchievementOrder::default()));
     let achievement_sorter = CustomSorter::new({
         let achievement_order = Rc::clone(&achievement_order);
         move |obj1, obj2| {
             let achievement1 = obj1.downcast_ref::<GAchievementObject>().unwrap();
             let achievement2 = obj2.downcast_ref::<GAchievementObject>().unwrap();
             match achievement_order.get() {
-                0 => Ordering::Equal.into(),
-                1 => achievement1
+                AchievementOrder::SteamDefault => Ordering::Equal.into(),
+                AchievementOrder::Alphabetical => achievement1
                     .name()
                     .to_lowercase()
                     .cmp(&achievement2.name().to_lowercase())
                     .into(),
-                3 => achievement2
+                AchievementOrder::UnlockDate => achievement2
                     .unlock_time_seconds()
                     .cmp(&achievement1.unlock_time_seconds())
                     .into(),
-                _ => achievement2
+                AchievementOrder::GlobalPercentage => achievement2
                     .global_achieved_percent()
                     .partial_cmp(&achievement1.global_achieved_percent())
                     .unwrap_or(Ordering::Equal)
@@ -100,6 +120,8 @@ pub fn create_achievements_view(
         .model(&app_achievement_status_filter_model)
         .sorter(&achievement_sorter)
         .build();
+    let achievement_model_updates =
+        AchievementModelUpdates::new(&achievement_status_filter, &achievement_sorter);
 
     let order_action = SimpleAction::new_stateful(
         "achievement-order",
@@ -115,11 +137,8 @@ pub fn create_achievements_view(
             let Some(value) = target.and_then(|target| target.str()) else {
                 return;
             };
-            let order = match value {
-                "steam-default" => 0,
-                "alphabetical" => 1,
-                "unlock-date" => 3,
-                _ => 2,
+            let Some(order) = AchievementOrder::from_action_target(value) else {
+                return;
             };
             action.set_state(&value.to_variant());
             achievement_order.set(order);
@@ -143,9 +162,10 @@ pub fn create_achievements_view(
                 return;
             };
             let state = match value {
+                "all" => None,
                 "locked" => Some(false),
                 "unlocked" => Some(true),
-                _ => None,
+                _ => return,
             };
             action.set_state(&value.to_variant());
             achievement_status.set(state);
@@ -166,7 +186,7 @@ pub fn create_achievements_view(
         &app_id,
         &app_unlocked_achievements_count,
         &app_achievement_selection_model,
-        &achievement_status_filter,
+        &achievement_model_updates,
         &app_achievements_model,
         &app_timed_achievements_model,
         &achievement_views_stack,
@@ -185,4 +205,14 @@ pub fn create_achievements_view(
         app_achievement_string_filter,
         cancel_timed_unlock,
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::AchievementOrder;
+
+    #[test]
+    fn achievement_order_rejects_unknown_action_targets() {
+        assert!(AchievementOrder::from_action_target("unknown").is_none());
+    }
 }

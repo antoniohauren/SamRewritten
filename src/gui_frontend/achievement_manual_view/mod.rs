@@ -30,7 +30,8 @@ use crate::gui_frontend::gsettings::get_settings;
 use crate::gui_frontend::i18n::tr;
 use crate::gui_frontend::unlock_queue::{UnlockQueue, resolve_target_count};
 use crate::gui_frontend::unlock_scheduler::{
-    SPACING_EVEN, SPACING_RANDOM, compute_unlock_times_ms, run_timed_unlock, unlock_all_immediately,
+    AchievementModelUpdates, SPACING_EVEN, SPACING_RANDOM, compute_unlock_times_ms,
+    run_timed_unlock, unlock_all_immediately,
 };
 use crate::utils::action_journal::Op;
 use crate::utils::format::format_achievement_progress;
@@ -41,7 +42,7 @@ use gtk::gio::{ListStore, SimpleAction};
 use gtk::glib::{MainContext, clone};
 use gtk::prelude::*;
 use gtk::{
-    Box, Button, CustomFilter, Frame, Label, ListView, NoSelection, Orientation, ScrolledWindow,
+    Box, Button, Frame, Label, ListView, NoSelection, Orientation, ScrolledWindow,
     SignalListItemFactory, SpinButton, Stack, ToggleButton, glib,
 };
 use header::create_header;
@@ -111,7 +112,7 @@ pub fn create_achievements_manual_view(
     app_id: &Rc<Cell<Option<u32>>>,
     app_unlocked_achievements_count: &Rc<Cell<usize>>,
     filtered_model: &NoSelection,
-    status_filter: &CustomFilter,
+    model_updates: &AchievementModelUpdates,
     raw_model: &ListStore,
     timed_raw_model: &ListStore,
     achievement_views_stack: &Stack,
@@ -119,6 +120,7 @@ pub fn create_achievements_manual_view(
     application: &MainApplication,
 ) -> (Frame, Arc<AtomicBool>) {
     let settings = get_settings();
+    let model_updates = model_updates.clone();
 
     let mode_state = Rc::new(GUnlockModeState::default());
     let initial_mode = settings.string("unlock-mode").to_string();
@@ -338,6 +340,8 @@ pub fn create_achievements_manual_view(
         cancelled_task,
         #[strong]
         timed_raw_model,
+        #[strong]
+        model_updates,
         #[weak]
         application,
         #[weak(rename_to = raw_model)]
@@ -387,6 +391,8 @@ pub fn create_achievements_manual_view(
                 timed_raw_model,
                 #[strong]
                 cancelled_task,
+                #[strong]
+                model_updates,
                 async move {
                     run_timed_unlock(
                         app_id_val,
@@ -395,6 +401,7 @@ pub fn create_achievements_manual_view(
                         times_ms,
                         timed_raw_model,
                         cancelled_task,
+                        model_updates,
                     )
                     .await;
                 }
@@ -414,6 +421,7 @@ pub fn create_achievements_manual_view(
         raw_model,
         timed_raw_model,
         &cancelled_task,
+        &model_updates,
         achievement_views_stack,
         application,
     );
@@ -431,7 +439,7 @@ pub fn create_achievements_manual_view(
         &header.queue_label,
         &cancelled_task,
         &update_autofill,
-        status_filter,
+        &model_updates,
     );
 
     let app_achievements_list_view = ListView::builder()
