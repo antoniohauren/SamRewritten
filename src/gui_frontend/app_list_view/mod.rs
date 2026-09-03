@@ -43,8 +43,8 @@ use crate::gui_frontend::request::{
     AppProgress, GetCollections, GetRunningApps, LaunchApp, Request, SetStealthMode, StopApp,
 };
 use crate::gui_frontend::ui_components::{
-    create_context_menu_button, set_context_popover_to_app_list_context,
-    set_context_popover_to_profile_context,
+    create_context_menu_button, set_app_details_view_options,
+    set_context_popover_to_app_list_context, set_context_popover_to_profile_context,
 };
 use crate::gui_frontend::widgets::steam_app_card::{CARD_HEIGHT, CARD_MIN_WIDTH, SteamAppCard};
 use crate::utils::action_journal;
@@ -393,8 +393,8 @@ pub fn create_main_ui(
         app_stack,
         app_shimmer_image,
         app_label,
-        _app_achievements_button,
-        _app_stats_button,
+        app_achievements_button,
+        app_stats_button,
         app_achievement_count_value,
         app_stats_count_value,
         app_type_value,
@@ -410,8 +410,6 @@ pub fn create_main_ui(
         app_pane,
         cancel_timed_unlock,
         app_achievements_stack,
-        achievement_status_filter_box,
-        achievement_order_button,
     ) = create_app_view(
         app_id.clone(),
         app_unlocked_achievements_count.clone(),
@@ -477,6 +475,25 @@ pub fn create_main_ui(
         context_menu_button_loading_progress_label,
         context_menu_button_info_label,
     ) = create_context_menu_button();
+    app_achievements_button.connect_clicked(clone!(
+        #[weak]
+        menu_model,
+        move |_| set_app_details_view_options(&menu_model, true)
+    ));
+    app_stats_button.connect_clicked(clone!(
+        #[weak]
+        menu_model,
+        move |_| set_app_details_view_options(&menu_model, false)
+    ));
+    app_stack.connect_visible_child_name_notify(clone!(
+        #[weak]
+        menu_model,
+        move |stack| match stack.visible_child_name().as_deref() {
+            Some("achievements") => set_app_details_view_options(&menu_model, true),
+            Some("stats") => set_app_details_view_options(&menu_model, false),
+            _ => {}
+        }
+    ));
     let sidebar_button = ToggleButton::builder()
         .icon_name("sidebar-show-symbolic")
         .tooltip_text(tr("Show or hide the sidebar").as_str())
@@ -484,10 +501,8 @@ pub fn create_main_ui(
     header_bar.pack_start(&back_button);
     header_bar.pack_start(&sidebar_button);
     header_bar.pack_start(&search_entry);
-    header_bar.pack_start(&achievement_order_button);
     header_bar.pack_end(&context_menu_button);
     header_bar.pack_end(&context_menu_button_loading);
-    header_bar.pack_end(&achievement_status_filter_box);
 
     let list_scrolled_window = ScrolledWindow::builder()
         .hscrollbar_policy(PolicyType::Never)
@@ -1712,22 +1727,6 @@ pub fn create_main_ui(
         &app_stack,
     );
 
-    app_stack.connect_visible_child_name_notify(clone!(
-        #[weak]
-        list_stack,
-        #[weak]
-        achievement_status_filter_box,
-        #[weak]
-        achievement_order_button,
-        move |stack| {
-            let show_achievement_controls = list_stack.visible_child_name().as_deref()
-                == Some("app")
-                && stack.visible_child_name().as_deref() == Some("achievements");
-            achievement_status_filter_box.set_visible(show_achievement_controls);
-            achievement_order_button.set_visible(show_achievement_controls);
-        }
-    ));
-
     list_stack.connect_visible_child_notify(clone!(
         #[weak]
         back_button,
@@ -1741,10 +1740,6 @@ pub fn create_main_ui(
         search_entry,
         #[weak]
         action_refresh_app_list,
-        #[weak]
-        achievement_status_filter_box,
-        #[weak]
-        achievement_order_button,
         #[strong]
         prefetched_progress,
         #[strong]
@@ -1753,10 +1748,6 @@ pub fn create_main_ui(
             let page = stack.visible_child_name();
             let page = page.as_deref();
             let on_own_page = page == Some("app") || page == Some("profile");
-            let show_achievement_controls = page == Some("app")
-                && app_stack.visible_child_name().as_deref() == Some("achievements");
-            achievement_status_filter_box.set_visible(show_achievement_controls);
-            achievement_order_button.set_visible(show_achievement_controls);
             sidebar_button.set_visible(!on_own_page);
             sidebar_button.set_sensitive(page == Some("list"));
             search_entry.set_sensitive(page != Some("profile"));

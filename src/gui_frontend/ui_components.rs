@@ -16,6 +16,7 @@
 use crate::gui_frontend::MainApplication;
 use crate::gui_frontend::application_actions::set_app_action_enabled;
 use crate::gui_frontend::i18n::{tr, tr_noop};
+use gtk::gio::prelude::MenuModelExt;
 use gtk::prelude::{BoxExt, SettingsExt, ToVariant};
 use gtk::{Label, License, MenuButton, Popover, PopoverMenu, PositionType, Spinner};
 
@@ -414,9 +415,57 @@ pub fn set_context_popover_to_app_details_context(
 
     ACHIEVEMENT_LANGUAGES_FROM_FETCH.with(|f| f.set(false));
     fill_achievement_language_menu(&[]);
+    set_app_details_view_options(menu_model, true);
+
+    set_app_action_enabled(application, "refresh_app_list", false);
+}
+
+/// Replace the tab-specific portion of the app-details menu.
+pub fn set_app_details_view_options(menu_model: &gtk::gio::Menu, achievements: bool) {
+    while menu_model.n_items() > 3 {
+        menu_model.remove(3);
+    }
+
+    if !achievements {
+        let order_menu = gtk::gio::Menu::new();
+        for (label, value) in [
+            (tr("Steam default"), "steam-default"),
+            (tr("Alphabetically"), "alphabetical"),
+        ] {
+            let item = gtk::gio::MenuItem::new(Some(label.as_str()), Some("app.stat-order"));
+            item.set_action_and_target_value(Some("app.stat-order"), Some(&value.to_variant()));
+            order_menu.append_item(&item);
+        }
+        menu_model.append_submenu(Some(tr("Stat order").as_str()), &order_menu);
+        return;
+    }
+
     ACHIEVEMENT_LANGUAGE_MENU.with(|menu| {
         menu_model.append_submenu(Some(tr("Achievement language").as_str()), menu);
     });
 
-    set_app_action_enabled(application, "refresh_app_list", false);
+    let order_menu = gtk::gio::Menu::new();
+    for (label, value) in [
+        (tr("Steam default"), "steam-default"),
+        (tr("Alphabetically"), "alphabetical"),
+        (tr("Global percentage"), "global-percentage"),
+        (tr("Unlock date"), "unlock-date"),
+    ] {
+        let item = gtk::gio::MenuItem::new(Some(label.as_str()), Some("app.achievement-order"));
+        item.set_action_and_target_value(Some("app.achievement-order"), Some(&value.to_variant()));
+        order_menu.append_item(&item);
+    }
+    menu_model.append_submenu(Some(tr("Achievement order").as_str()), &order_menu);
+
+    let state_menu = gtk::gio::Menu::new();
+    for (label, value) in [
+        (tr("All"), "all"),
+        (tr("Locked"), "locked"),
+        (tr("Unlocked"), "unlocked"),
+    ] {
+        let item = gtk::gio::MenuItem::new(Some(label.as_str()), Some("app.achievement-state"));
+        item.set_action_and_target_value(Some("app.achievement-state"), Some(&value.to_variant()));
+        state_menu.append_item(&item);
+    }
+    menu_model.append_submenu(Some(tr("Achievement state").as_str()), &state_menu);
 }

@@ -17,14 +17,12 @@ use crate::gui_frontend::MainApplication;
 use crate::gui_frontend::achievement_automatic_view::create_achievements_automatic_view;
 use crate::gui_frontend::achievement_manual_view::create_achievements_manual_view;
 use crate::gui_frontend::gobjects::achievement::GAchievementObject;
-use crate::gui_frontend::i18n::tr;
-use gtk::gio::ListStore;
+use gtk::gio::{ListStore, SimpleAction};
 use gtk::glib;
 use gtk::prelude::*;
 use gtk::{
-    Align, Box, CheckButton, CustomFilter, CustomSorter, FilterChange, FilterListModel, Label,
-    MenuButton, NoSelection, Orientation, Popover, SortListModel, SorterChange, Stack,
-    StackTransitionType, StringFilter, StringFilterMatchMode, ToggleButton,
+    CustomFilter, CustomSorter, FilterChange, FilterListModel, Label, NoSelection, SortListModel,
+    SorterChange, Stack, StackTransitionType, StringFilter, StringFilterMatchMode,
 };
 use std::cell::Cell;
 use std::cmp::Ordering;
@@ -37,14 +35,7 @@ pub fn create_achievements_view(
     app_unlocked_achievements_count: Rc<Cell<usize>>,
     application: &MainApplication,
     app_achievement_count_value: &Label,
-) -> (
-    Stack,
-    ListStore,
-    StringFilter,
-    Arc<AtomicBool>,
-    Box,
-    MenuButton,
-) {
+) -> (Stack, ListStore, StringFilter, Arc<AtomicBool>) {
     let app_achievements_model = ListStore::new::<GAchievementObject>();
     let app_timed_achievements_model = ListStore::new::<GAchievementObject>();
 
@@ -73,48 +64,6 @@ pub fn create_achievements_view(
         .model(&app_achievement_filter_model)
         .filter(&achievement_status_filter)
         .build();
-    let all_toggle = ToggleButton::builder()
-        .icon_name("object-select-symbolic")
-        .tooltip_text(tr("All").as_str())
-        .build();
-    let locked_toggle = ToggleButton::builder()
-        .icon_name("changes-prevent-symbolic")
-        .tooltip_text(tr("Locked").as_str())
-        .group(&all_toggle)
-        .build();
-    let unlocked_toggle = ToggleButton::builder()
-        .icon_name("changes-allow-symbolic")
-        .tooltip_text(tr("Unlocked").as_str())
-        .group(&all_toggle)
-        .build();
-    all_toggle.set_active(true);
-    let status_filter_box = Box::builder()
-        .orientation(Orientation::Horizontal)
-        .css_classes(["linked"])
-        .valign(Align::Center)
-        .visible(false)
-        .build();
-    status_filter_box.append(&all_toggle);
-    status_filter_box.append(&locked_toggle);
-    status_filter_box.append(&unlocked_toggle);
-    for (button, state) in [
-        (&all_toggle, None),
-        (&locked_toggle, Some(false)),
-        (&unlocked_toggle, Some(true)),
-    ] {
-        button.connect_toggled(glib::clone!(
-            #[strong]
-            achievement_status,
-            #[weak]
-            achievement_status_filter,
-            move |button| {
-                if button.is_active() {
-                    achievement_status.set(state);
-                    achievement_status_filter.changed(FilterChange::Different);
-                }
-            }
-        ));
-    }
     let app_achievement_timed_filter_model = FilterListModel::builder()
         .model(&app_timed_achievements_model)
         .filter(&app_achievement_string_filter)
@@ -152,62 +101,58 @@ pub fn create_achievements_view(
         .sorter(&achievement_sorter)
         .build();
 
-    let order_popover_box = Box::builder()
-        .orientation(Orientation::Vertical)
-        .margin_start(8)
-        .margin_end(8)
-        .margin_top(8)
-        .margin_bottom(8)
-        .build();
-    let steam_order = CheckButton::builder()
-        .label(tr("Steam default").as_str())
-        .build();
-    let alphabetical_order = CheckButton::builder()
-        .label(tr("Alphabetically").as_str())
-        .group(&steam_order)
-        .build();
-    let percentage_order = CheckButton::builder()
-        .label(tr("Global percentage").as_str())
-        .group(&steam_order)
-        .build();
-    let unlock_date_order = CheckButton::builder()
-        .label(tr("Unlock date").as_str())
-        .group(&steam_order)
-        .build();
-    percentage_order.set_active(true);
-    order_popover_box.append(&steam_order);
-    order_popover_box.append(&alphabetical_order);
-    order_popover_box.append(&percentage_order);
-    order_popover_box.append(&unlock_date_order);
-    let order_popover = Popover::builder().child(&order_popover_box).build();
-    let order_button = MenuButton::builder()
-        .icon_name("view-sort-descending-symbolic")
-        .tooltip_text(tr("Order achievements").as_str())
-        .popover(&order_popover)
-        .visible(false)
-        .build();
-    for (button, order) in [
-        (&steam_order, 0),
-        (&alphabetical_order, 1),
-        (&percentage_order, 2),
-        (&unlock_date_order, 3),
-    ] {
-        button.connect_toggled(glib::clone!(
-            #[strong]
-            achievement_order,
-            #[weak]
-            achievement_sorter,
-            #[weak]
-            order_popover,
-            move |button| {
-                if button.is_active() {
-                    achievement_order.set(order);
-                    achievement_sorter.changed(SorterChange::Different);
-                    order_popover.popdown();
-                }
-            }
-        ));
-    }
+    let order_action = SimpleAction::new_stateful(
+        "achievement-order",
+        Some(&String::static_variant_type()),
+        &"global-percentage".to_variant(),
+    );
+    order_action.connect_activate(glib::clone!(
+        #[strong]
+        achievement_order,
+        #[weak]
+        achievement_sorter,
+        move |action, target| {
+            let Some(value) = target.and_then(|target| target.str()) else {
+                return;
+            };
+            let order = match value {
+                "steam-default" => 0,
+                "alphabetical" => 1,
+                "unlock-date" => 3,
+                _ => 2,
+            };
+            action.set_state(&value.to_variant());
+            achievement_order.set(order);
+            achievement_sorter.changed(SorterChange::Different);
+        }
+    ));
+    application.add_action(&order_action);
+
+    let state_action = SimpleAction::new_stateful(
+        "achievement-state",
+        Some(&String::static_variant_type()),
+        &"all".to_variant(),
+    );
+    state_action.connect_activate(glib::clone!(
+        #[strong]
+        achievement_status,
+        #[weak]
+        achievement_status_filter,
+        move |action, target| {
+            let Some(value) = target.and_then(|target| target.str()) else {
+                return;
+            };
+            let state = match value {
+                "locked" => Some(false),
+                "unlocked" => Some(true),
+                _ => None,
+            };
+            action.set_state(&value.to_variant());
+            achievement_status.set(state);
+            achievement_status_filter.changed(FilterChange::Different);
+        }
+    ));
+    application.add_action(&state_action);
 
     let app_achievement_selection_model = NoSelection::new(Option::<ListStore>::None);
     app_achievement_selection_model.set_model(Some(&app_achievement_sort_model));
@@ -239,7 +184,5 @@ pub fn create_achievements_view(
         app_achievements_model,
         app_achievement_string_filter,
         cancel_timed_unlock,
-        status_filter_box,
-        order_button,
     )
 }

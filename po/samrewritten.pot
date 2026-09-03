@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SamRewritten\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-03 11:39-0300\n"
+"POT-Creation-Date: 2026-09-03 14:52-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,102 +17,142 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/gui_frontend/ui_components.rs:159 src/gui_frontend/app_view.rs:64
-#: src/gui_frontend/app_list_view/mod.rs:423
+#: src/gui_frontend/ui_components.rs:160 src/gui_frontend/app_view.rs:62
+#: src/gui_frontend/app_list_view/mod.rs:421
 msgid "Loading..."
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:190
+#: src/gui_frontend/ui_components.rs:191
 msgid "Select all visible apps"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:194
+#: src/gui_frontend/ui_components.rs:195
 msgid "Deselect all apps"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:198
+#: src/gui_frontend/ui_components.rs:199
 msgid "Unlock all in selection"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:202
+#: src/gui_frontend/ui_components.rs:203
 msgid "Reset all in selection"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:206
+#: src/gui_frontend/ui_components.rs:207
 #: src/gui_frontend/app_list_view/progress_actions.rs:116
 msgid "Export selected apps progress"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:210
+#: src/gui_frontend/ui_components.rs:211
 msgid "Import progress..."
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:216
+#: src/gui_frontend/ui_components.rs:217
 msgid "Appear in-game while managing"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:222
+#: src/gui_frontend/ui_components.rs:223
 msgid "Refresh app list"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:226
+#: src/gui_frontend/ui_components.rs:227
 msgid "Refresh achievement counts"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:229 src/gui_frontend/ui_components.rs:413
+#: src/gui_frontend/ui_components.rs:230 src/gui_frontend/ui_components.rs:414
 msgid "About"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:233
+#: src/gui_frontend/ui_components.rs:234
 msgid "Change Steam folder…"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:240
+#: src/gui_frontend/ui_components.rs:241
 msgid "Bulk process"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:246
+#: src/gui_frontend/ui_components.rs:247
 msgid "System"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:247
+#: src/gui_frontend/ui_components.rs:248
 msgid "Light"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:248
+#: src/gui_frontend/ui_components.rs:249
 msgid "Dark"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:257
+#: src/gui_frontend/ui_components.rs:258
 msgid "Disable animations"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:261
+#: src/gui_frontend/ui_components.rs:262
 msgid "Appearance"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:267
+#: src/gui_frontend/ui_components.rs:268
 msgid "System default"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:270
+#: src/gui_frontend/ui_components.rs:271
 msgid "Language"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:387
+#: src/gui_frontend/ui_components.rs:388
 msgid "Game default"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:406
+#: src/gui_frontend/ui_components.rs:407
 msgid "Refresh achievements & stats"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:410
+#: src/gui_frontend/ui_components.rs:411
 msgid "Reset everything"
 msgstr ""
 
-#: src/gui_frontend/ui_components.rs:418
+#: src/gui_frontend/ui_components.rs:432 src/gui_frontend/ui_components.rs:449
+msgid "Steam default"
+msgstr ""
+
+#: src/gui_frontend/ui_components.rs:433 src/gui_frontend/ui_components.rs:450
+msgid "Alphabetically"
+msgstr ""
+
+#: src/gui_frontend/ui_components.rs:439
+msgid "Stat order"
+msgstr ""
+
+#: src/gui_frontend/ui_components.rs:444
 msgid "Achievement language"
+msgstr ""
+
+#: src/gui_frontend/ui_components.rs:451
+msgid "Global percentage"
+msgstr ""
+
+#: src/gui_frontend/ui_components.rs:452
+msgid "Unlock date"
+msgstr ""
+
+#: src/gui_frontend/ui_components.rs:458
+msgid "Achievement order"
+msgstr ""
+
+#: src/gui_frontend/ui_components.rs:462
+msgid "All"
+msgstr ""
+
+#: src/gui_frontend/ui_components.rs:463
+msgid "Locked"
+msgstr ""
+
+#: src/gui_frontend/ui_components.rs:464
+msgid "Unlocked"
+msgstr ""
+
+#: src/gui_frontend/ui_components.rs:470
+msgid "Achievement state"
 msgstr ""
 
 #: src/gui_frontend/dialogs.rs:89 src/gui_frontend/dialogs.rs:162
@@ -234,88 +274,56 @@ msgstr ""
 msgid "Select your Steam folder"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:70
+#: src/gui_frontend/app_view.rs:68
 msgid "Achievements:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:84
+#: src/gui_frontend/app_view.rs:82
 msgid "Stats:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:98
+#: src/gui_frontend/app_view.rs:96
 msgid "Last playtime:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:112
+#: src/gui_frontend/app_view.rs:110
 msgid "Type:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:126
+#: src/gui_frontend/app_view.rs:124
 msgid "Developer:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:143
+#: src/gui_frontend/app_view.rs:141
 msgid "Metacritic:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:157
+#: src/gui_frontend/app_view.rs:155
 msgid "Failed to load app."
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:163
+#: src/gui_frontend/app_view.rs:161
 msgid "No entries found."
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:180
+#: src/gui_frontend/app_view.rs:178
 msgid "Achievements"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:183
+#: src/gui_frontend/app_view.rs:181
 msgid "Stats"
 msgstr ""
 
-#: src/gui_frontend/stat_view.rs:102
+#: src/gui_frontend/stat_view.rs:152
 msgid "Increment only"
 msgstr ""
 
-#: src/gui_frontend/stat_view.rs:107
+#: src/gui_frontend/stat_view.rs:157
 msgid "This statistic is protected."
 msgstr ""
 
 #: src/gui_frontend/achievement_automatic_view.rs:40
 msgid "Stop and go back"
-msgstr ""
-
-#: src/gui_frontend/achievement_view.rs:78
-msgid "All"
-msgstr ""
-
-#: src/gui_frontend/achievement_view.rs:82
-msgid "Locked"
-msgstr ""
-
-#: src/gui_frontend/achievement_view.rs:87
-msgid "Unlocked"
-msgstr ""
-
-#: src/gui_frontend/achievement_view.rs:163
-msgid "Steam default"
-msgstr ""
-
-#: src/gui_frontend/achievement_view.rs:166
-msgid "Alphabetically"
-msgstr ""
-
-#: src/gui_frontend/achievement_view.rs:170
-msgid "Global percentage"
-msgstr ""
-
-#: src/gui_frontend/achievement_view.rs:174
-msgid "Unlock date"
-msgstr ""
-
-#: src/gui_frontend/achievement_view.rs:185
-msgid "Order achievements"
 msgstr ""
 
 #: src/gui_frontend/achievement_manual_view/mod.rs:57
@@ -453,33 +461,33 @@ msgstr ""
 msgid "Clear selected user"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:444
+#: src/gui_frontend/app_list_view/mod.rs:442
 msgid "SamRewritten could not connect to Steam. Is it running?"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:449
+#: src/gui_frontend/app_list_view/mod.rs:447
 msgid "Try again"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:466
-#: src/gui_frontend/app_list_view/mod.rs:1778
+#: src/gui_frontend/app_list_view/mod.rs:464
+#: src/gui_frontend/app_list_view/mod.rs:1769
 msgid "Name or AppId (Ctrl+K)"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:482
+#: src/gui_frontend/app_list_view/mod.rs:499
 msgid "Show or hide the sidebar"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:1773
+#: src/gui_frontend/app_list_view/mod.rs:1764
 msgid "Achievement or stat..."
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:1892
+#: src/gui_frontend/app_list_view/mod.rs:1883
 #: src/gui_frontend/app_list_view/settings_bindings.rs:328
 msgid "Could not change the in-game setting"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:1894
+#: src/gui_frontend/app_list_view/mod.rs:1885
 #: src/gui_frontend/app_list_view/settings_bindings.rs:329
 msgid "The change could not be applied. Restart SamRewritten and try again."
 msgstr ""

@@ -24,8 +24,8 @@ use gtk::glib::clone;
 use gtk::pango::{EllipsizeMode, WrapMode};
 use gtk::prelude::*;
 use gtk::{
-    Align, Box, Label, MenuButton, Orientation, Separator, Spinner, Stack, StackTransitionType,
-    StringFilter, ToggleButton,
+    Align, Box, Label, Orientation, Separator, Spinner, Stack, StackTransitionType, StringFilter,
+    ToggleButton,
 };
 use std::cell::Cell;
 use std::rc::Rc;
@@ -57,8 +57,6 @@ pub fn create_app_view(
     Box,
     Arc<AtomicBool>,
     Stack,
-    Box,
-    MenuButton,
 ) {
     let app_spinner = Spinner::builder().spinning(true).margin_end(5).build();
     let app_spinner_label = Label::builder().label(tr("Loading...").as_str()).build();
@@ -228,8 +226,6 @@ pub fn create_app_view(
         app_achievements_model,
         app_achievement_string_filter,
         cancel_timed_unlock,
-        achievement_status_filter_box,
-        achievement_order_button,
     ) = create_achievements_view(
         app_id.clone(),
         app_unlocked_achievements_count,
@@ -237,7 +233,8 @@ pub fn create_app_view(
         &app_achievement_count_value,
     );
 
-    let (app_stat_scrolled_window, app_stat_model, app_stat_string_filter) = create_stats_view();
+    let (app_stat_scrolled_window, app_stat_model, app_stat_string_filter) =
+        create_stats_view(application);
 
     let app_stack = Stack::builder()
         .transition_type(StackTransitionType::SlideLeftRight)
@@ -341,7 +338,5 @@ pub fn create_app_view(
         app_pane,
         cancel_timed_unlock,
         app_achievements_stack,
-        achievement_status_filter_box,
-        achievement_order_button,
     )
 }
