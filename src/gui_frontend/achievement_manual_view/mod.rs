@@ -41,7 +41,7 @@ use gtk::gio::{ListStore, SimpleAction};
 use gtk::glib::{MainContext, clone};
 use gtk::prelude::*;
 use gtk::{
-    Box, Button, Frame, Label, ListView, NoSelection, Orientation, ScrolledWindow,
+    Box, Button, CustomFilter, Frame, Label, ListView, NoSelection, Orientation, ScrolledWindow,
     SignalListItemFactory, SpinButton, Stack, ToggleButton, glib,
 };
 use header::create_header;
@@ -111,6 +111,7 @@ pub fn create_achievements_manual_view(
     app_id: &Rc<Cell<Option<u32>>>,
     app_unlocked_achievements_count: &Rc<Cell<usize>>,
     filtered_model: &NoSelection,
+    status_filter: &CustomFilter,
     raw_model: &ListStore,
     timed_raw_model: &ListStore,
     achievement_views_stack: &Stack,
@@ -430,6 +431,7 @@ pub fn create_achievements_manual_view(
         &header.queue_label,
         &cancelled_task,
         &update_autofill,
+        status_filter,
     );
 
     let app_achievements_list_view = ListView::builder()

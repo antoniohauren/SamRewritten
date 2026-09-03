@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SamRewritten\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-02 21:40+0200\n"
+"POT-Creation-Date: 2026-09-03 10:59-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,8 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/gui_frontend/ui_components.rs:159 src/gui_frontend/app_view.rs:62
-#: src/gui_frontend/app_list_view/mod.rs:421
+#: src/gui_frontend/ui_components.rs:159 src/gui_frontend/app_view.rs:63
+#: src/gui_frontend/app_list_view/mod.rs:422
 msgid "Loading..."
 msgstr ""
 
@@ -147,9 +147,9 @@ msgstr ""
 #: src/gui_frontend/dialogs.rs:290
 msgid ""
 "If you've installed Steam in a custom location, you can point SamRewritten "
-"to it using environment variables. Please check the <a href=\"https://github."
-"com/PaulCombal/SamRewritten\">GitHub page</a> for instructions, or to report "
-"your issue."
+"to it using environment variables. Please check the <a href=\"https://"
+"github.com/PaulCombal/SamRewritten\">GitHub page</a> for instructions, or to "
+"report your issue."
 msgstr ""
 
 #: src/gui_frontend/dialogs.rs:295
@@ -234,43 +234,43 @@ msgstr ""
 msgid "Select your Steam folder"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:68
+#: src/gui_frontend/app_view.rs:69
 msgid "Achievements:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:82
+#: src/gui_frontend/app_view.rs:83
 msgid "Stats:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:96
+#: src/gui_frontend/app_view.rs:97
 msgid "Last playtime:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:110
+#: src/gui_frontend/app_view.rs:111
 msgid "Type:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:124
+#: src/gui_frontend/app_view.rs:125
 msgid "Developer:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:141
+#: src/gui_frontend/app_view.rs:142
 msgid "Metacritic:"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:155
+#: src/gui_frontend/app_view.rs:156
 msgid "Failed to load app."
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:161
+#: src/gui_frontend/app_view.rs:162
 msgid "No entries found."
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:178
+#: src/gui_frontend/app_view.rs:179
 msgid "Achievements"
 msgstr ""
 
-#: src/gui_frontend/app_view.rs:181
+#: src/gui_frontend/app_view.rs:182
 msgid "Stats"
 msgstr ""
 
@@ -421,150 +421,150 @@ msgstr ""
 msgid "Clear selected user"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:442
+#: src/gui_frontend/app_list_view/mod.rs:443
 msgid "SamRewritten could not connect to Steam. Is it running?"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:447
+#: src/gui_frontend/app_list_view/mod.rs:448
 msgid "Try again"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:464
-#: src/gui_frontend/app_list_view/mod.rs:1752
+#: src/gui_frontend/app_list_view/mod.rs:465
+#: src/gui_frontend/app_list_view/mod.rs:1771
 msgid "Name or AppId (Ctrl+K)"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:480
+#: src/gui_frontend/app_list_view/mod.rs:481
 msgid "Show or hide the sidebar"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:1747
+#: src/gui_frontend/app_list_view/mod.rs:1766
 msgid "Achievement or stat..."
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:1866
-#: src/gui_frontend/app_list_view/settings_bindings.rs:333
+#: src/gui_frontend/app_list_view/mod.rs:1885
+#: src/gui_frontend/app_list_view/settings_bindings.rs:328
 msgid "Could not change the in-game setting"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/mod.rs:1868
-#: src/gui_frontend/app_list_view/settings_bindings.rs:334
+#: src/gui_frontend/app_list_view/mod.rs:1887
+#: src/gui_frontend/app_list_view/settings_bindings.rs:329
 msgid "The change could not be applied. Restart SamRewritten and try again."
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:58
+#: src/gui_frontend/app_list_view/sidebar.rs:57
 msgid "Hide with no achievements"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:64
+#: src/gui_frontend/app_list_view/sidebar.rs:63
 msgid "Hide at 100%"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:70
+#: src/gui_frontend/app_list_view/sidebar.rs:69
 msgid "Hide at 0%"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:76
+#: src/gui_frontend/app_list_view/sidebar.rs:75
 msgid "Hide never launched"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:82
+#: src/gui_frontend/app_list_view/sidebar.rs:81
 msgid "Only currently idling"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:88
+#: src/gui_frontend/app_list_view/sidebar.rs:87
 msgid "Hide hidden in Steam"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:94
+#: src/gui_frontend/app_list_view/sidebar.rs:93
 msgid "Show junk"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:108
+#: src/gui_frontend/app_list_view/sidebar.rs:107
 msgid "App ID"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:113
+#: src/gui_frontend/app_list_view/sidebar.rs:112
 msgid "Name"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:118
+#: src/gui_frontend/app_list_view/sidebar.rs:117
 msgid "Last played"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:123
+#: src/gui_frontend/app_list_view/sidebar.rs:122
 msgid "Playtime"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:128
+#: src/gui_frontend/app_list_view/sidebar.rs:127
 msgid "Completion"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:133
+#: src/gui_frontend/app_list_view/sidebar.rs:132
 msgid "Achievements left"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:183
+#: src/gui_frontend/app_list_view/sidebar.rs:180
 msgid "Filters on a search term, which SamRewritten cannot reproduce exactly."
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:186
+#: src/gui_frontend/app_list_view/sidebar.rs:183
 msgid "Uses a Steam filter SamRewritten cannot reproduce exactly."
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:189
+#: src/gui_frontend/app_list_view/sidebar.rs:186
 msgid ""
 "Needs information from Steam that could not be read. Refresh to try again."
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:192
+#: src/gui_frontend/app_list_view/sidebar.rs:189
 msgid ""
 "Needs your friends' games, which Steam can only tell us when it is online."
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:201
+#: src/gui_frontend/app_list_view/sidebar.rs:198
 msgid "Favorites"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:228
+#: src/gui_frontend/app_list_view/sidebar.rs:225
 msgid "View profile"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:283
+#: src/gui_frontend/app_list_view/sidebar.rs:280
 #: src/gui_frontend/profile_view/mod.rs:484
 msgid "Steam user"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:305
+#: src/gui_frontend/app_list_view/sidebar.rs:300
 msgid "Steam is offline. What needs its servers is turned off."
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:316
+#: src/gui_frontend/app_list_view/sidebar.rs:311
 msgid "Fetching completion…"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:322
+#: src/gui_frontend/app_list_view/sidebar.rs:317
 msgid "Click to cancel"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:353
+#: src/gui_frontend/app_list_view/sidebar.rs:348
 msgid "Filters"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:364
+#: src/gui_frontend/app_list_view/sidebar.rs:359
 msgid "Steam collection"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:365
-#: src/gui_frontend/app_list_view/sidebar.rs:588
+#: src/gui_frontend/app_list_view/sidebar.rs:360
+#: src/gui_frontend/app_list_view/sidebar.rs:580
 msgid "All games"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:448
+#: src/gui_frontend/app_list_view/sidebar.rs:442
 msgid "Sort by"
 msgstr ""
 
-#: src/gui_frontend/app_list_view/sidebar.rs:513
+#: src/gui_frontend/app_list_view/sidebar.rs:505
 msgid "Reset filters"
 msgstr ""
 

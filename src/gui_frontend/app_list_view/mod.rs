@@ -410,6 +410,7 @@ pub fn create_main_ui(
         app_pane,
         cancel_timed_unlock,
         app_achievements_stack,
+        achievement_status_filter_box,
     ) = create_app_view(
         app_id.clone(),
         app_unlocked_achievements_count.clone(),
@@ -484,6 +485,7 @@ pub fn create_main_ui(
     header_bar.pack_start(&search_entry);
     header_bar.pack_end(&context_menu_button);
     header_bar.pack_end(&context_menu_button_loading);
+    header_bar.pack_end(&achievement_status_filter_box);
 
     let list_scrolled_window = ScrolledWindow::builder()
         .hscrollbar_policy(PolicyType::Never)
@@ -1708,6 +1710,19 @@ pub fn create_main_ui(
         &app_stack,
     );
 
+    app_stack.connect_visible_child_name_notify(clone!(
+        #[weak]
+        list_stack,
+        #[weak]
+        achievement_status_filter_box,
+        move |stack| {
+            achievement_status_filter_box.set_visible(
+                list_stack.visible_child_name().as_deref() == Some("app")
+                    && stack.visible_child_name().as_deref() == Some("achievements"),
+            );
+        }
+    ));
+
     list_stack.connect_visible_child_notify(clone!(
         #[weak]
         back_button,
@@ -1721,6 +1736,8 @@ pub fn create_main_ui(
         search_entry,
         #[weak]
         action_refresh_app_list,
+        #[weak]
+        achievement_status_filter_box,
         #[strong]
         prefetched_progress,
         #[strong]
@@ -1729,6 +1746,10 @@ pub fn create_main_ui(
             let page = stack.visible_child_name();
             let page = page.as_deref();
             let on_own_page = page == Some("app") || page == Some("profile");
+            achievement_status_filter_box.set_visible(
+                page == Some("app")
+                    && app_stack.visible_child_name().as_deref() == Some("achievements"),
+            );
             sidebar_button.set_visible(!on_own_page);
             sidebar_button.set_sensitive(page == Some("list"));
             search_entry.set_sensitive(page != Some("profile"));

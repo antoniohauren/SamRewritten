@@ -25,7 +25,7 @@ use crate::utils::format::format_achievement_progress;
 use gtk::gio::{ListStore, spawn_blocking};
 use gtk::glib::{self, MainContext, clone};
 use gtk::prelude::*;
-use gtk::{Button, Label, ListItem, SignalListItemFactory};
+use gtk::{Button, CustomFilter, FilterChange, Label, ListItem, SignalListItemFactory};
 use std::cell::Cell;
 use std::rc::Rc;
 use std::sync::Arc;
@@ -44,6 +44,7 @@ pub(super) fn install_row_factory(
     queue_label: &Label,
     cancelled_task: &Arc<AtomicBool>,
     update_autofill: &Rc<dyn Fn()>,
+    status_filter: &CustomFilter,
 ) {
     factory.connect_setup(clone!(
         #[strong]
@@ -58,6 +59,8 @@ pub(super) fn install_row_factory(
         cancelled_task,
         #[strong]
         update_autofill,
+        #[weak]
+        status_filter,
         #[weak]
         raw_model,
         #[weak]
@@ -93,6 +96,8 @@ pub(super) fn install_row_factory(
                 raw_model,
                 #[weak]
                 start_button,
+                #[weak]
+                status_filter,
                 move |switch| {
                     let Some(achievement_object) =
                         list_item.item().and_downcast::<GAchievementObject>()
@@ -143,6 +148,8 @@ pub(super) fn install_row_factory(
                         achievement_object,
                         #[weak]
                         start_button,
+                        #[weak]
+                        status_filter,
                         async move {
                             let result = handle.await.expect("spawn_blocking task panicked");
                             // Steam accepting the call and then failing to
@@ -169,6 +176,7 @@ pub(super) fn install_row_factory(
                                     start_button
                                         .set_sensitive(new_unlocked != raw_model_len as usize);
                                     update_autofill();
+                                    status_filter.changed(FilterChange::Different);
                                 }
                                 Ok(false) => {
                                     eprintln!("[CLIENT] Steam did not store the achievement");

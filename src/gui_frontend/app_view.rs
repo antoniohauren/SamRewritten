@@ -57,6 +57,7 @@ pub fn create_app_view(
     Box,
     Arc<AtomicBool>,
     Stack,
+    Box,
 ) {
     let app_spinner = Spinner::builder().spinning(true).margin_end(5).build();
     let app_spinner_label = Label::builder().label(tr("Loading...").as_str()).build();
@@ -226,6 +227,7 @@ pub fn create_app_view(
         app_achievements_model,
         app_achievement_string_filter,
         cancel_timed_unlock,
+        achievement_status_filter_box,
     ) = create_achievements_view(
         app_id.clone(),
         app_unlocked_achievements_count,
@@ -337,5 +339,6 @@ pub fn create_app_view(
         app_pane,
         cancel_timed_unlock,
         app_achievements_stack,
+        achievement_status_filter_box,
     )
 }
