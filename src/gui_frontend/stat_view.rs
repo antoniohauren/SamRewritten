@@ -53,6 +53,13 @@ impl StatOrder {
             _ => None,
         }
     }
+
+    fn as_action_target(self) -> &'static str {
+        match self {
+            Self::SteamDefault => "steam-default",
+            Self::Alphabetical => "alphabetical",
+        }
+    }
 }
 
 pub fn create_stats_view(application: &MainApplication) -> (Frame, ListStore, StringFilter) {
@@ -82,9 +89,8 @@ pub fn create_stats_view(application: &MainApplication) -> (Frame, ListStore, St
     let app_stats_sort_model = SortListModel::builder()
         .model(&app_stats_filter_model)
         .build();
-    let order_value = settings.string("stat-order").to_string();
-    let initial_order =
-        StatOrder::from_action_target(&order_value).unwrap_or(StatOrder::SteamDefault);
+    let initial_order = StatOrder::from_action_target(&settings.string("stat-order"))
+        .unwrap_or(StatOrder::SteamDefault);
     if matches!(initial_order, StatOrder::Alphabetical) {
         app_stats_sort_model.set_sorter(Some(&stat_sorter));
     }
@@ -92,7 +98,7 @@ pub fn create_stats_view(application: &MainApplication) -> (Frame, ListStore, St
     let order_action = SimpleAction::new_stateful(
         "stat-order",
         Some(&String::static_variant_type()),
-        &order_value.to_variant(),
+        &initial_order.as_action_target().to_variant(),
     );
     order_action.connect_activate(glib::clone!(
         #[strong]

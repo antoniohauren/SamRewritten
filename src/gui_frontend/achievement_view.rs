@@ -51,6 +51,15 @@ impl AchievementOrder {
             _ => None,
         }
     }
+
+    fn as_action_target(self) -> &'static str {
+        match self {
+            Self::SteamDefault => "steam-default",
+            Self::Alphabetical => "alphabetical",
+            Self::GlobalPercentage => "global-percentage",
+            Self::UnlockDate => "unlock-date",
+        }
+    }
 }
 
 pub fn create_achievements_view(
@@ -93,8 +102,8 @@ pub fn create_achievements_view(
         .filter(&app_achievement_string_filter)
         .build();
 
-    let order_value = settings.string("achievement-order").to_string();
-    let initial_order = AchievementOrder::from_action_target(&order_value).unwrap_or_default();
+    let initial_order = AchievementOrder::from_action_target(&settings.string("achievement-order"))
+        .unwrap_or_default();
     let achievement_order = Rc::new(Cell::new(initial_order));
     let achievement_sorter = CustomSorter::new({
         let achievement_order = Rc::clone(&achievement_order);
@@ -133,7 +142,7 @@ pub fn create_achievements_view(
     let order_action = SimpleAction::new_stateful(
         "achievement-order",
         Some(&String::static_variant_type()),
-        &order_value.to_variant(),
+        &initial_order.as_action_target().to_variant(),
     );
     order_action.connect_activate(glib::clone!(
         #[strong]
